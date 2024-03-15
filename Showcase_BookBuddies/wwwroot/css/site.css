@@ -21,13 +21,17 @@ body {
   margin-bottom: 60px;
 }
 
+.header {
+    background-color: #DFD0F1 !important;
+}
+
 /* styles for book-list-item */
-book-list-item {
-    display: flex; /* Make list items stack horizontally */
-    border: 3px solid #ddd;
+/*book-list-item {
+    display: flex;*/ /* Make list items stack horizontally */
+    /*border: 3px solid #ddd;
     border-radius: 10px;
     width: 400px;
     margin-left: 451px;
     padding: 5px;
     justify-content: center;
-}
+}*/
