@@ -9,12 +9,14 @@
 
 <template id="boekenlijst-toevoegen-form-tpl">
     <p>Voeg een boekenlijst toe!</p>
-    <form>
-        <label>Titel van jouw boekenlijst:</label>
-        <input name="lijstTitel" type="text" />
-        <label>Beschrijving van jouw boekenlijst:</label>
-        <input name="lijstBeschrijving" type="text" />
-        <button>Toevoegen!</button>
-    </form>
+    
     <div id="boekenlijst-gegevens"></div>
 </template>
+
+<form asp-controller="Home" asp-action="AddBookList" method="post">
+    <label>Titel van jouw boekenlijst:</label>
+    <input name="listTitle" type="text" />
+    <label>Beschrijving van jouw boekenlijst:</label>
+    <input name="listDescription" type="text" />
+    <input type="submit" value="AddBookList" />
+</form>

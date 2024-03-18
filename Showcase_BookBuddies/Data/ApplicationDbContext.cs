@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Showcase_BookBuddies.Business.Entities;
 
 namespace Showcase_BookBuddies.Data
 {
@@ -9,5 +10,7 @@ namespace Showcase_BookBuddies.Data
             : base(options)
         {
         }
+        public DbSet<BookList> BookLists { get; set; }
+
     }
 }
