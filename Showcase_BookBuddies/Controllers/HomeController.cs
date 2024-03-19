@@ -1,7 +1,9 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Showcase_BookBuddies.Business.Entities;
 using Showcase_BookBuddies.Data;
+using Showcase_BookBuddies.Migrations;
 using Showcase_BookBuddies.Models;
 using System.Diagnostics;
 using System.Drawing;
@@ -15,9 +17,9 @@ namespace Showcase_BookBuddies.Controllers
         private readonly ApplicationDbContext _context;
         private readonly SignInManager<IdentityUser> _signInManager;
 
-        public HomeController(ILogger<HomeController> logger, 
-            UserManager<IdentityUser> userManager, 
-            SignInManager<IdentityUser> signInManager, 
+        public HomeController(ILogger<HomeController> logger,
+            UserManager<IdentityUser> userManager,
+            SignInManager<IdentityUser> signInManager,
             ApplicationDbContext context)
         {
             _logger = logger;
@@ -25,21 +27,41 @@ namespace Showcase_BookBuddies.Controllers
             _context = context;
             _signInManager = signInManager;
         }
-
+        [Authorize]
         public IActionResult Index()
         {
+            if (_signInManager.IsSignedIn(this.User))
+            {
+                string? userId = _userManager.GetUserId(this.User);
+                if (userId is not null)
+                {
+                    var userBookList = _context.BookLists.Where(b => b.UserId == userId);
+                    return View(userBookList);
+                }
+            }
             return View();
         }
+        [Authorize]
         [HttpPost]
         public IActionResult AddBookList(string listTitle, string listDescription)
         {
             if (_signInManager.IsSignedIn(this.User))
             {
                 string? userId = _userManager.GetUserId(this.User);
-                var bookList = new BookList() { UserId = userId, ListTitle = listTitle, ListDescription = listDescription };
-                _context.BookLists.Add(bookList);
-                _context.SaveChanges();
+                bool hasList = _context.BookLists.Any(b => b.UserId == userId);
+                if (!hasList)
+                {
+                    var bookList = new BookList() { UserId = userId, ListTitle = listTitle, ListDescription = listDescription };
+                    _context.BookLists.Add(bookList);
+                    _context.SaveChanges();
+                }
+                else
+                {
+                    var bookList = _context.BookLists.Where(b => b.UserId == userId);
+                }
+
             }
+
             return RedirectToAction(nameof(Index));
 
         }

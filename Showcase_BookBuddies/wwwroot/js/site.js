@@ -8,21 +8,21 @@
     }
 
     connectedCallback() {
-        this.applyTemplate();
+        //this.applyTemplate();
         this.attachEventListeners();
     }
 
     attachEventListeners() {
-        let form = this.shadowRoot.querySelector('form');
+        //let form = this.shadowRoot.querySelector('form');
 
-        form.addEventListener('submit', (event) => {
-            event.preventDefault();
-            let formAddBookList = new FormData(form)
+        //form.addEventListener('submit', (event) => {
+        //    event.preventDefault();
+        //    let formAddBookList = new FormData(form)
 
-            let obj = Object.fromEntries(formAddBookList);
+        //    let obj = Object.fromEntries(formAddBookList);
 
-            // Haal het element op waar de gegevens worden weergegeven
-            let bookListDataElement = this.shadowRoot.querySelector('#boekenlijst-gegevens');
+        //    // Haal het element op waar de gegevens worden weergegeven
+        //    let bookListDataElement = this.shadowRoot.querySelector('#boekenlijst-gegevens');
 
             // Maak een string met de gegevens
             let boekenlijstGegevens = `
@@ -33,24 +33,17 @@
                 </ul>
             `;
 
-            //List<Book> testje = new List<Book>();
-            //bookList.Add(new Book { Titel = obj.title, Author = obj.listDescription });
-            //testje.Add(new Book { Titel = "The Lord of the Rings", Author = "J.R.R. Tolkien" });
-            //BookList myList = new BookList(obj.listTitle, obj.listDescription, bookList);
-
-
-
             // Voeg de string toe aan het element
             bookListDataElement.innerHTML = boekenlijstGegevens;
 
-        })
+        //})
     }
 
-    applyTemplate() {
-        const template = document.getElementById('boekenlijst-toevoegen-form-tpl');
-        let clone = template.content.cloneNode(true);
-        this.shadowRoot.appendChild(clone);
-    }
+    //applyTemplate() {
+    //    const template = document.getElementById('boekenlijst-toevoegen-form-tpl');
+     //   let clone = template.content.cloneNode(true);
+     //   this.shadowRoot.appendChild(clone);
+    //}
 
 }
 

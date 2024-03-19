@@ -8,15 +8,30 @@
 </div>
 
 <template id="boekenlijst-toevoegen-form-tpl">
-    <p>Voeg een boekenlijst toe!</p>
-    
     <div id="boekenlijst-gegevens"></div>
 </template>
 
 <form asp-controller="Home" asp-action="AddBookList" method="post">
+    <p>Voeg een boekenlijst toe!</p>
     <label>Titel van jouw boekenlijst:</label>
     <input name="listTitle" type="text" />
     <label>Beschrijving van jouw boekenlijst:</label>
     <input name="listDescription" type="text" />
     <input type="submit" value="AddBookList" />
 </form>
+
+@{
+    if (Model is not null)
+    {
+        @foreach (var item in Model)
+        {
+            <a>@(item.ListTitle)</a>
+            <a>@(item.ListDescription)</a>
+        }
+    }
+    else
+    {
+        <a>Model is null</a>
+    }
+
+}
