@@ -4,12 +4,15 @@
 
 <div class="text-center">
     <boekenlijst-toevoegen-form></boekenlijst-toevoegen-form>
-
+    @foreach (var item in Model)
+    {
+        <book-list list-title="@item.ListTitle" list-description="@item.ListDescription"></book-list>
+        foreach (var book in item.Books)
+        {
+            <book-s book-title="@book.BookTitle" book-author="@book.BookAuthor"></book-s>
+        }
+    }
 </div>
-
-<template id="boekenlijst-toevoegen-form-tpl">
-    <div id="boekenlijst-gegevens"></div>
-</template>
 
 <form asp-controller="Home" asp-action="AddBookList" method="post">
     <p>Voeg een boekenlijst toe!</p>
@@ -20,18 +23,11 @@
     <input type="submit" value="AddBookList" />
 </form>
 
-@{
-    if (Model is not null)
-    {
-        @foreach (var item in Model)
-        {
-            <a>@(item.ListTitle)</a>
-            <a>@(item.ListDescription)</a>
-        }
-    }
-    else
-    {
-        <a>Model is null</a>
-    }
-
-}
+<form asp-controller="Home" asp-action="AddBooks" method="post">
+    <p>Voeg een boek toe!</p>
+    <label>Titel van jouw boek:</label>
+    <input name="bookTitle" type="text" />
+    <label>Auteur van jouw boek:</label>
+    <input name="bookAuthor" type="text" />
+    <input type="submit" value="AddBooks" />
+</form>

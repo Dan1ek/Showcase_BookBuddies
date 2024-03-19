@@ -1,50 +1,43 @@
-﻿class AddBookList extends HTMLElement {
+﻿//class AddBookList extends HTMLElement {
 
-    shadowRoot;
+//import { extend } from "jquery";
 
+class BookListComponent extends HTMLElement {
     constructor() {
         super();
-        this.shadowRoot = this.attachShadow({ mode: 'open' });
+        this.attachShadow({ mode: 'open' });
     }
 
     connectedCallback() {
-        //this.applyTemplate();
-        this.attachEventListeners();
+        const listTitle = this.getAttribute('list-title');
+        const listDescription = this.getAttribute('list-description');
+
+        const shadowRoot = this.shadowRoot;
+        shadowRoot.innerHTML = `
+        <h2>${listTitle}</h2>
+        <p>${listDescription}</p>
+        `;
     }
-
-    attachEventListeners() {
-        //let form = this.shadowRoot.querySelector('form');
-
-        //form.addEventListener('submit', (event) => {
-        //    event.preventDefault();
-        //    let formAddBookList = new FormData(form)
-
-        //    let obj = Object.fromEntries(formAddBookList);
-
-        //    // Haal het element op waar de gegevens worden weergegeven
-        //    let bookListDataElement = this.shadowRoot.querySelector('#boekenlijst-gegevens');
-
-            // Maak een string met de gegevens
-            let boekenlijstGegevens = `
-                <h2>Nieuwe boekenlijst toegevoegd</h2>
-                <ul>
-                <li>Titel: ${obj.listTitle}</li>
-                <li>Beschrijving: ${obj.listDescription}</li>
-                </ul>
-            `;
-
-            // Voeg de string toe aan het element
-            bookListDataElement.innerHTML = boekenlijstGegevens;
-
-        //})
-    }
-
-    //applyTemplate() {
-    //    const template = document.getElementById('boekenlijst-toevoegen-form-tpl');
-     //   let clone = template.content.cloneNode(true);
-     //   this.shadowRoot.appendChild(clone);
-    //}
-
 }
 
-customElements.define('boekenlijst-toevoegen-form', AddBookList);
+customElements.define('book-list', BookListComponent);
+
+class BookComponent extends HTMLElement {
+    constructor() {
+        super();
+        this.attachShadow({ mode: 'open' });
+    }
+
+    connectedCallback() {
+        const bookTitle = this.getAttribute('book-title');
+        const bookAuthor = this.getAttribute('book-author');
+
+        const shadowRoot = this.shadowRoot;
+        shadowRoot.innerHTML = `
+        <p>${bookTitle}</p>
+        <p>${bookAuthor}</p>
+        `;
+    }
+}
+
+customElements.define('book-s', BookComponent);

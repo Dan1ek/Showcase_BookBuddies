@@ -15,17 +15,5 @@ namespace Showcase_BookBuddies.Business.Entities
         public string UserId { get; set; }
         public ICollection<Book>? Books { get; set; } //list
 
-        //public List<Book> books { get; set; }
-        //public BookList(string title, string description, List<Book> books)
-        //{
-        //    Title = title;
-        //    Description = description;
-        //    Books = books ?? new List<Book>(); // Initialize an empty list if none provided
-        //}
-
-        //public void AddBook(Book book)
-        //{
-        //    Books.Add(book);
-        //}
     }
 }
