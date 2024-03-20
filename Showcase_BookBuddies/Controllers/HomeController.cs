@@ -68,7 +68,6 @@ namespace Showcase_BookBuddies.Controllers
                 { // als de gebruiker al een lijst heeft, geef deze terug
                     var bookList = _context.BookLists.Where(b => b.UserId == userId);
                 }
-
             }
             // ga terug naar de index pagina
             return RedirectToAction(nameof(Index));
@@ -87,7 +86,7 @@ namespace Showcase_BookBuddies.Controllers
                 {
                     return RedirectToAction(nameof(Index));
                 }
-                else
+                else // error als je niks invult
                 {
                     int bookListId = _context.BookLists.Where(b => b.UserId == userId).Select(b => b.Id).ToList().FirstOrDefault();
                     Book books = new Book() { UserId = userId, BookTitle = bookTitle, BookAuthor = bookAuthor, BookListId = bookListId };

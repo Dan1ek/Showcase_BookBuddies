@@ -2,8 +2,24 @@
     ViewData["Title"] = "Home Page";
 }
 
+
 <div class="text-center">
-    <boekenlijst-toevoegen-form></boekenlijst-toevoegen-form>
+    @if (Model.Count > 0)
+    {
+        <p>Jouw boekenlijst:</p>
+        <input type="submit" value="VoegBoekToe" id="buttonAddBook" />
+    }
+    else
+    {
+        <form asp-controller="Home" asp-action="AddBookList" method="post">
+            <p>Voeg een boekenlijst toe!</p>
+            <label>Titel van jouw boekenlijst:</label>
+            <input name="listTitle" type="text" />
+            <label>Beschrijving van jouw boekenlijst:</label>
+            <input name="listDescription" type="text" />
+            <input type="submit" value="AddBookList" />
+        </form>        
+    }
     @foreach (var item in Model)
     {
         <book-list list-title="@item.ListTitle" list-description="@item.ListDescription"></book-list>
@@ -14,16 +30,9 @@
     }
 </div>
 
-<form asp-controller="Home" asp-action="AddBookList" method="post">
-    <p>Voeg een boekenlijst toe!</p>
-    <label>Titel van jouw boekenlijst:</label>
-    <input name="listTitle" type="text" />
-    <label>Beschrijving van jouw boekenlijst:</label>
-    <input name="listDescription" type="text" />
-    <input type="submit" value="AddBookList" />
-</form>
 
-<form asp-controller="Home" asp-action="AddBooks" method="post">
+
+<form asp-controller="Home" asp-action="AddBooks" id="add-books-form" class="addBooksFormInvisible">
     <p>Voeg een boek toe!</p>
     <label>Titel van jouw boek:</label>
     <input name="bookTitle" type="text" />
