@@ -6,11 +6,13 @@ using Showcase_BookBuddies.Business.Entities;
 using Showcase_BookBuddies.Data;
 using Showcase_BookBuddies.Migrations;
 using Showcase_BookBuddies.Models;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 
 namespace Showcase_BookBuddies.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -28,7 +30,6 @@ namespace Showcase_BookBuddies.Controllers
             _context = context;
             _signInManager = signInManager;
         }
-        [Authorize]
         public IActionResult Index()
         {
             if (_signInManager.IsSignedIn(this.User))
@@ -39,15 +40,14 @@ namespace Showcase_BookBuddies.Controllers
                     //var userBookList = _context.BookLists.Where(b => b.UserId == userId);
                     var bookLists = _context.BookLists
                                     // voeg books toe aan de booklists
-                                    .Include(b => b.Books) 
-                                    .Where(b => b.UserId == userId)
+                                    .Include(bl => bl.Books)
+                                    .Where(bl => bl.UserId == userId)
                                     .ToList();
                     return View(bookLists);
                 }
             }
             return View();
         }
-        [Authorize]
         [HttpPost]
         public IActionResult AddBookList(string listTitle, string listDescription)
         {
@@ -57,10 +57,14 @@ namespace Showcase_BookBuddies.Controllers
                 // checkt of de user bestaat of niet en of deze een list heeft
                 bool hasList = _context.BookLists.Any(b => b.UserId == userId);
                 // checken of de gebruiker al een lijst heeft
-                if (!hasList) 
-                { 
+                if (!hasList)
+                {
                     // toevoegen van de opgegeven informatie aan een nieuwe lijst
-                    BookList bookList = new BookList() { UserId = userId, ListTitle = listTitle, ListDescription = listDescription };
+                    BookList bookList = new BookList() { 
+                        UserId = userId, 
+                        ListTitle = listTitle, 
+                        ListDescription = listDescription 
+                    };
                     _context.BookLists.Add(bookList);
                     _context.SaveChanges();
                 }
@@ -74,7 +78,6 @@ namespace Showcase_BookBuddies.Controllers
 
         }
 
-        [Authorize]
         [HttpPost]
         public IActionResult AddBooks(string bookTitle, string bookAuthor)
         {
@@ -88,8 +91,17 @@ namespace Showcase_BookBuddies.Controllers
                 }
                 else // error als je niks invult
                 {
-                    int bookListId = _context.BookLists.Where(b => b.UserId == userId).Select(b => b.Id).ToList().FirstOrDefault();
-                    Book books = new Book() { UserId = userId, BookTitle = bookTitle, BookAuthor = bookAuthor, BookListId = bookListId };
+                    int bookListId = _context.BookLists
+                        .Where(bli => bli.UserId == userId)
+                        .Select(bli => bli.Id)
+                        .ToList()
+                        .FirstOrDefault();
+                    Book books = new Book() { 
+                        UserId = userId, 
+                        BookTitle = bookTitle, 
+                        BookAuthor = bookAuthor, 
+                        BookListId = bookListId 
+                    };
                     _context.Books.Add(books);
                     _context.SaveChanges();
                 }
@@ -97,6 +109,81 @@ namespace Showcase_BookBuddies.Controllers
             }
 
             return RedirectToAction(nameof(Index));
+
+        }
+        public IActionResult AllLists()
+        {
+            if (_signInManager.IsSignedIn(this.User))
+            {
+                string? userId = _userManager.GetUserId(this.User);
+                if (userId is not null)
+                {
+                    var bookLists = _context.BookLists
+                                    // voeg books toe aan de booklists
+                                    .Include(b => b.Books)
+                                    .Where(b => b.UserId != userId)
+                                    .ToList();
+                    return View(bookLists);
+                }
+            }
+            return View();
+        }
+
+        [Authorize(Roles = "Admin")]
+        public IActionResult DeleteLibrary()
+        {
+            if (_signInManager.IsSignedIn(this.User))
+            {
+                string? userId = _userManager.GetUserId(this.User);
+                if (userId is not null)
+                {
+                    var bookLists = _context.BookLists
+                                    // voeg alle boekenlijsten toe aan de pagina
+                                    .Include(b => b.Books)
+                                    .ToList();
+                    return View(bookLists);
+                }
+            }
+            return View();
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        public IActionResult DeleteBookList()
+        {
+            if (_signInManager.IsSignedIn(this.User))
+            {
+                if (ModelState.IsValid)
+                { 
+                    int listId = Convert.ToInt32(Request.Form["listId"]);
+                    var bookListToDelete = _context.BookLists
+                                    .Where(b => b.Id == listId)
+                                    .FirstOrDefault();
+                    var booksToDelete = _context.Books
+                        .Where(b => b.BookListId == listId)
+                        .ToList();
+
+                    if (bookListToDelete is not null)
+                    {
+                        foreach (var books in booksToDelete)
+                        {
+                            // Delete the books first, before deleting the list, because there's a connection between the two tables
+                            _context.Books.Remove(books);
+                        }
+                        _context.SaveChanges();
+
+
+                        // Delete the book list
+                        _context.BookLists.Remove(bookListToDelete);
+                        _context.SaveChanges();
+                    }
+                    else
+                    {
+                        Console.WriteLine("Book list not found.");
+                    }
+                }
+            }
+            return RedirectToAction(nameof(DeleteLibrary));
 
         }
 

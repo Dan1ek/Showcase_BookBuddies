@@ -1,0 +1,16 @@
+﻿
+@{
+    ViewData["Title"] = "LikedList";
+}
+
+<h1>AllLists</h1>
+
+
+@foreach (var item in Model)
+{
+    <book-list list-title="@item.ListTitle" list-description="@item.ListDescription"></book-list>
+    foreach (var book in item.Books)
+    {
+        <book-s book-title="@book.BookTitle" book-author="@book.BookAuthor"></book-s>
+    }
+}
