@@ -78,7 +78,7 @@ namespace Showcase_BookBuddies.Controllers
                     };
                     _context.BookLists.Add(bookList);
                     _context.SaveChanges();
-                    await _updateList.Clients.All.SendAsync("ReceiveUpdate");
+                    await _updateList.Clients.All.SendAsync("SendUpdate");
 
                 }
                 else
@@ -98,7 +98,6 @@ namespace Showcase_BookBuddies.Controllers
             {
                 string? userId = _userManager.GetUserId(this.User);
                 bool hasList = _context.BookLists.Any(b => b.UserId == userId);
-                BookList bookList = _context.BookLists.Where(b => b.UserId == userId).FirstOrDefault();
                 if (!hasList)
                 {
                     return RedirectToAction(nameof(Index));
@@ -118,7 +117,7 @@ namespace Showcase_BookBuddies.Controllers
                     };
                     _context.Books.Add(books);
                     _context.SaveChanges();
-                    await _updateList.Clients.All.SendAsync("ReceiveUpdate");
+                    await _updateList.Clients.All.SendAsync("SendUpdate");
 
                 }
 
@@ -191,7 +190,7 @@ namespace Showcase_BookBuddies.Controllers
                         // Delete the book list
                         _context.BookLists.Remove(bookListToDelete);
                         _context.SaveChanges();
-                        await _updateList.Clients.All.SendAsync("ReceiveUpdate");
+                        await _updateList.Clients.All.SendAsync("SendUpdate");
 
                     }
                     else

@@ -8,9 +8,7 @@ namespace Showcase_BookBuddies.Hubs
     {
         public async Task SendUpdate()
         {
-            // Verzend de bijgewerkte booklist naar alle clients
-            //await Clients.All.SendAsync("ReceiveUpdate", bookList);
-            //await Clients.All.SendAsync("ReceiveUpdate");
+            await Clients.All.SendAsync("SendUpdate");
 
         }
 

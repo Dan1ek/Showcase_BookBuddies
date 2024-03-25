@@ -49,6 +49,5 @@ app.MapRazorPages();
 
 app.MapHub<ChatHub>("/chatHub");
 app.MapHub<UpdateList>("/updateList");
-app.MapHub<UpdateBook>("/updateBook");
 
 app.Run();
