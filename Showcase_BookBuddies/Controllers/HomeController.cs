@@ -1,9 +1,11 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Showcase_BookBuddies.Business.Entities;
 using Showcase_BookBuddies.Data;
+using Showcase_BookBuddies.Hubs;
 using Showcase_BookBuddies.Migrations;
 using Showcase_BookBuddies.Models;
 using System.Collections.Generic;
@@ -19,16 +21,21 @@ namespace Showcase_BookBuddies.Controllers
         private readonly UserManager<IdentityUser> _userManager;
         private readonly ApplicationDbContext _context;
         private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly IHubContext<UpdateList> _updateList;
+
 
         public HomeController(ILogger<HomeController> logger,
             UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager,
-            ApplicationDbContext context)
+            ApplicationDbContext context,
+            IHubContext<UpdateList> updateList
+            )
         {
             _logger = logger;
             _userManager = userManager;
             _context = context;
             _signInManager = signInManager;
+            _updateList = updateList;
         }
         public IActionResult Index()
         {
@@ -48,8 +55,12 @@ namespace Showcase_BookBuddies.Controllers
             }
             return View();
         }
+        public IActionResult ChatHub()
+        { 
+            return View();
+        }
         [HttpPost]
-        public IActionResult AddBookList(string listTitle, string listDescription)
+        public async Task<IActionResult> AddBookList(string listTitle, string listDescription)
         {
             if (_signInManager.IsSignedIn(this.User))
             {
@@ -67,6 +78,8 @@ namespace Showcase_BookBuddies.Controllers
                     };
                     _context.BookLists.Add(bookList);
                     _context.SaveChanges();
+                    await _updateList.Clients.All.SendAsync("SendUpdate");
+
                 }
                 else
                 { // als de gebruiker al een lijst heeft, geef deze terug
@@ -79,7 +92,7 @@ namespace Showcase_BookBuddies.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddBooks(string bookTitle, string bookAuthor)
+        public async Task<IActionResult> AddBooks(string bookTitle, string bookAuthor)
         {
             if (_signInManager.IsSignedIn(this.User))
             {
@@ -104,6 +117,8 @@ namespace Showcase_BookBuddies.Controllers
                     };
                     _context.Books.Add(books);
                     _context.SaveChanges();
+                    await _updateList.Clients.All.SendAsync("SendUpdate");
+
                 }
 
             }
@@ -149,7 +164,7 @@ namespace Showcase_BookBuddies.Controllers
 
         [Authorize(Roles = "Admin")]
         [HttpPost]
-        public IActionResult DeleteBookList()
+        public async Task<IActionResult> DeleteBookList()
         {
             if (_signInManager.IsSignedIn(this.User))
             {
@@ -172,10 +187,11 @@ namespace Showcase_BookBuddies.Controllers
                         }
                         _context.SaveChanges();
 
-
                         // Delete the book list
                         _context.BookLists.Remove(bookListToDelete);
                         _context.SaveChanges();
+                        await _updateList.Clients.All.SendAsync("SendUpdate");
+
                     }
                     else
                     {
