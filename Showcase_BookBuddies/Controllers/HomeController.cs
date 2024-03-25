@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Showcase_BookBuddies.Business.Entities;
 using Showcase_BookBuddies.Data;
+using Showcase_BookBuddies.Hubs;
 using Showcase_BookBuddies.Migrations;
 using Showcase_BookBuddies.Models;
 using System.Collections.Generic;
@@ -19,6 +20,7 @@ namespace Showcase_BookBuddies.Controllers
         private readonly UserManager<IdentityUser> _userManager;
         private readonly ApplicationDbContext _context;
         private readonly SignInManager<IdentityUser> _signInManager;
+
 
         public HomeController(ILogger<HomeController> logger,
             UserManager<IdentityUser> userManager,
@@ -46,6 +48,10 @@ namespace Showcase_BookBuddies.Controllers
                     return View(bookLists);
                 }
             }
+            return View();
+        }
+        public IActionResult ChatHub()
+        { 
             return View();
         }
         [HttpPost]
@@ -85,6 +91,7 @@ namespace Showcase_BookBuddies.Controllers
             {
                 string? userId = _userManager.GetUserId(this.User);
                 bool hasList = _context.BookLists.Any(b => b.UserId == userId);
+                BookList bookList = _context.BookLists.Where(b => b.UserId == userId).FirstOrDefault();
                 if (!hasList)
                 {
                     return RedirectToAction(nameof(Index));
@@ -171,7 +178,6 @@ namespace Showcase_BookBuddies.Controllers
                             _context.Books.Remove(books);
                         }
                         _context.SaveChanges();
-
 
                         // Delete the book list
                         _context.BookLists.Remove(bookListToDelete);

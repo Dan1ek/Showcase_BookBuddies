@@ -14,3 +14,46 @@
         <book-s book-title="@book.BookTitle" book-author="@book.BookAuthor"></book-s>
     }
 }
+
+<!-- Voeg jQuery en SignalR JavaScript-bestanden toe -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="/path/to/signalr.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        // Verbinding maken met de SignalR Hub
+        var connection = new signalR.HubConnectionBuilder()
+            .withUrl("/updateList")
+            .configureLogging(signalR.LogLevel.Information)
+            .build();
+
+        // Event afhandelen voor het ontvangen van updates
+        connection.on("ReceiveUpdate", function () {
+            // Herlaad de pagina
+            location.reload();
+        });
+
+        // Start de verbinding
+        connection.start().catch(function (err) {
+            return console.error(err.toString());
+        });
+    });
+</script>
+
+
+@* <script src="~/js/signalr/dist/browser/signalr.min.js"></script>
+<script src="~/js/realtime.js"></script> *@
+
+@* <script>
+    var connection = new signalR.HubConnectionBuilder().withUrl("/updateList").build();
+
+    connection.start().then(function () {
+        console.log("SignalR connected.");
+    }).catch(function (err) {
+        return console.error(err.toString());
+    });
+
+    connection.on("ReloadPage", function () {
+        location.reload();
+    });
+</script> *@
