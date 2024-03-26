@@ -1,9 +1,20 @@
 ﻿@{
     ViewData["Title"] = "MyLibrary";
 }
-<hello-world></hello-world>
+@* <hello-world></hello-world> *@
 
 <div class="text-center">
+    @foreach (var item in Model)
+    {
+        <book-list list-title="@item.ListTitle" list-description="@item.ListDescription"></book-list>
+        <p>---------------------------------------------</p>
+        foreach (var book in item.Books)
+        {
+            <book-s book-title="Titel: {@book.BookTitle}" book-author="Author: {@book.BookAuthor}"></book-s>
+            <p>-----</p>
+
+        }
+    }
     @if (Model.Count > 0)
     {
         <p>Jouw boekenlijst:</p>
@@ -11,7 +22,7 @@
     }
     else
     {
-        <form asp-controller="Home" asp-action="AddBookList" method="post">
+        <form asp-controller="Home" asp-action="AddBookList" id="add-booklist-form" method="post">
             <p>Voeg een boekenlijst toe!</p>
             <label>Titel van jouw boekenlijst:</label>
             <input name="listTitle" type="text" />
@@ -20,14 +31,7 @@
             <input type="submit" value="AddBookList" />
         </form>        
     }
-    @foreach (var item in Model)
-    {
-        <book-list list-title="@item.ListTitle" list-description="@item.ListDescription"></book-list>
-        foreach (var book in item.Books)
-        {
-            <book-s book-title="@book.BookTitle" book-author="@book.BookAuthor"></book-s>
-        }
-    }
+    
 </div>
 
 

@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewData["Title"] = "LikedList";
+    ViewData["Title"] = "AllLists";
 }
 
 <h1>AllLists</h1>
@@ -9,9 +9,11 @@
 @foreach (var item in Model)
 {
     <book-list list-title="@item.ListTitle" list-description="@item.ListDescription"></book-list>
+    <p>---------------------------------------------</p>
     foreach (var book in item.Books)
     {
-        <book-s book-title="@book.BookTitle" book-author="@book.BookAuthor"></book-s>
+        <book-s book-title="Titel: {@book.BookTitle}" book-author="Author: {@book.BookAuthor}"></book-s>
+        <p>-----</p>
     }
 }
 

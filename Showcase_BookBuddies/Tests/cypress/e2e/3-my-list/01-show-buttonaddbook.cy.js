@@ -1,8 +1,8 @@
-
+﻿
 const url = 'https://localhost:7015';
 
 
-context('Hello World with Login', () => {
+describe('Initial Page Load', () => {
     const userEmail = 'someone@gmail.com'; // Replace with your actual email
     const userPassword = 'P@ssw0rd'; // Replace with your actual password
 
@@ -18,7 +18,12 @@ context('Hello World with Login', () => {
 
     });
 
-    it('bestaat hello-world', () => {
-        cy.get('hello-world').should('exist');
+        it('should conditionally render add book button and form', () => {
+            // Test case for empty book list (no button or form)
+            cy.get('#buttonAddBook').should('be.visible');
+            cy.get('#add-booklist-form').should('not.exist');
+        });
     });
-});
+
+
+

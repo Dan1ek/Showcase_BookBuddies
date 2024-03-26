@@ -23,6 +23,18 @@ namespace Showcase_BookBuddies.Controllers
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly IHubContext<UpdateList> _updateList;
 
+        //public HomeController(ILogger<HomeController> logger, 
+        //    UserManager<IdentityUser> userManager, 
+        //    ApplicationDbContext context, 
+        //    SignInManager<IdentityUser> signInManager
+        //    )
+        //{
+        //    _logger = logger;
+        //    _userManager = userManager;
+        //    _context = context;
+        //    _signInManager = signInManager;
+
+        //}
 
         public HomeController(ILogger<HomeController> logger,
             UserManager<IdentityUser> userManager,
