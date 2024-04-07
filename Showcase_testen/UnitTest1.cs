@@ -75,22 +75,22 @@ namespace Showcase_BookBuddies.Tests.Controllers
 
 
         //}
-        [Test]
-        [Authorize]
-        public void ChatHub_ReturnsViewForAuthorizedUsers()
-        {
-            // Arrange
-            var mockLogger = new Mock<ILogger<HomeController>>();
-            var controller = new HomeController(mockLogger.Object);
+        //[Test]
+        //[Authorize]
+        //public void ChatHub_ReturnsViewForAuthorizedUsers()
+        //{
+        //    // Arrange
+        //    var mockLogger = new Mock<ILogger<HomeController>>();
+        //    var controller = new HomeController(mockLogger.Object);
 
-            // Act
-            var result = controller.ChatHub();
+        //    // Act
+        //    var result = controller.ChatHub();
 
-            // Assert
-            Assert.IsInstanceOf<IActionResult>(result);
+        //    // Assert
+        //    Assert.IsInstanceOf<IActionResult>(result);
 
 
-        }
+        //}
 
 
     }

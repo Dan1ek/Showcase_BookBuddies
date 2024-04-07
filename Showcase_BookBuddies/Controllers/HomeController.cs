@@ -51,10 +51,10 @@ namespace Showcase_BookBuddies.Controllers
             _updateList = updateList;
         }
 
-        public HomeController(ILogger<HomeController> @object)
-        {
-            this.@object = @object;
-        }
+        //public HomeController(ILogger<HomeController> @object)
+        //{
+        //    this.@object = @object;
+        //}
 
         public IActionResult Index()
         {
