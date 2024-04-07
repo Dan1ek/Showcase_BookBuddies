@@ -22,6 +22,7 @@ namespace Showcase_BookBuddies.Controllers
         private readonly ApplicationDbContext _context;
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly IHubContext<UpdateList> _updateList;
+        private ILogger<HomeController> @object;
 
         //public HomeController(ILogger<HomeController> logger, 
         //    UserManager<IdentityUser> userManager, 
@@ -49,6 +50,12 @@ namespace Showcase_BookBuddies.Controllers
             _signInManager = signInManager;
             _updateList = updateList;
         }
+
+        public HomeController(ILogger<HomeController> @object)
+        {
+            this.@object = @object;
+        }
+
         public IActionResult Index()
         {
             if (_signInManager.IsSignedIn(this.User))
