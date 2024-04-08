@@ -89,16 +89,25 @@ namespace Showcase_BookBuddies.Controllers
                 // checken of de gebruiker al een lijst heeft
                 if (!hasList)
                 {
-                    // toevoegen van de opgegeven informatie aan een nieuwe lijst
-                    BookList bookList = new BookList() { 
-                        UserId = userId, 
-                        ListTitle = listTitle, 
-                        ListDescription = listDescription 
-                    };
-                    _context.BookLists.Add(bookList);
-                    _context.SaveChanges();
-                    await _updateList.Clients.All.SendAsync("SendUpdate");
-
+                    if (!string.IsNullOrEmpty(listTitle))
+                    {
+                        if (!string.IsNullOrEmpty(listDescription))
+                        {
+                            // toevoegen van de opgegeven informatie aan een nieuwe lijst
+                            BookList bookList = new BookList()
+                            {
+                                UserId = userId,
+                                ListTitle = listTitle,
+                                ListDescription = listDescription
+                            };
+                            _context.BookLists.Add(bookList);
+                            _context.SaveChanges();
+                            await _updateList.Clients.All.SendAsync("SendUpdate");
+                        }
+                    } else
+                    {
+                        return RedirectToAction(nameof(Index));
+                    }
                 }
                 else
                 { // als de gebruiker al een lijst heeft, geef deze terug
@@ -123,21 +132,30 @@ namespace Showcase_BookBuddies.Controllers
                 }
                 else // error als je niks invult
                 {
-                    int bookListId = _context.BookLists
+                    if (!string.IsNullOrEmpty(bookAuthor))
+                    {
+                        if (!string.IsNullOrEmpty(bookTitle))
+                        {
+                            int bookListId = _context.BookLists
                         .Where(bli => bli.UserId == userId)
                         .Select(bli => bli.Id)
                         .ToList()
                         .FirstOrDefault();
-                    Book books = new Book() { 
-                        UserId = userId, 
-                        BookTitle = bookTitle, 
-                        BookAuthor = bookAuthor, 
-                        BookListId = bookListId 
-                    };
-                    _context.Books.Add(books);
-                    _context.SaveChanges();
-                    await _updateList.Clients.All.SendAsync("SendUpdate");
-
+                            Book books = new Book()
+                            {
+                                UserId = userId,
+                                BookTitle = bookTitle,
+                                BookAuthor = bookAuthor,
+                                BookListId = bookListId
+                            };
+                            _context.Books.Add(books);
+                            _context.SaveChanges();
+                            await _updateList.Clients.All.SendAsync("SendUpdate");
+                        }
+                    } else
+                    {
+                        return RedirectToAction(nameof(Index));
+                    }
                 }
 
             }
